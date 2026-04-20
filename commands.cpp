@@ -10,8 +10,16 @@ void healCommand(Entity& entity, const std::list<std::string>& args) {
         return;
     }
 
-    int value = std::stoi(args.front());
-    entity.heal(value);
+    try {
+        int value = std::stoi(args.front());
+        if (value < 0) {
+            std::cout << "Error! el valor debe ser positivo.\n";
+            return;
+        }
+        entity.heal(value);
+    } catch (...) {
+        std::cout << "[heal] Error: argumento invalido (no es un numero).\n";
+    }
 }
 
 
@@ -21,6 +29,20 @@ void damageCommand(Entity& entity, const std::list<std::string>& args) {
         return;
     }
 
-    int value = std::stoi(args.front());
-    entity.damage(value);
+    try {
+        int value = std::stoi(args.front());
+        if (value < 0) {
+            std::cout << "[damage] Error: el valor debe ser positivo.\n";
+            return;
+        }
+        entity.damage(value);
+    } catch (...) {
+        std::cout << "[damage] Error: argumento invalido (no es un numero).\n";
+    }
+
 }
+void statusCommand(Entity& entity, const std::list<std::string>& args) {
+    // No necesita argumentos; imprime el estado actual de la entidad
+    std::cout << "[status] " << entity.status() << "\n";
+}
+ 
