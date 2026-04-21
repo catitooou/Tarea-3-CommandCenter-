@@ -7,7 +7,7 @@
 #include <string>
 #include "Entity.h"
 
-// Tipo de comando: función que recibe lista de strings y no retorna valor
+//función que recibe lista de strings y no retorna ningun valor
 using Command = std::function<void(const std::list<std::string>&)>;
 
 class CommandCenter {
@@ -27,18 +27,20 @@ public:
     void execute(const std::string& name, const std::list<std::string>& args);
 
     // Elimina un comando del mapa dinámicamente
+
     void removeCommand(const std::string& name);
 
-    // Registra un macro (secuencia de pasos)
+    // secuencia de pasos
     void registerMacro(
         const std::string& name,
         const std::list<std::pair<std::string, std::list<std::string>>>& steps
     );
 
     // Ejecuta un macro registrado
+
     void executeMacro(const std::string& name);
 
-    // Imprime el historial de ejecución
+    
     void printHistory() const;
 };
 

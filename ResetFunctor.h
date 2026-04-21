@@ -7,35 +7,34 @@
 #include "Entity.h"
 
 /*
- * ResetFunctor: Functor que ejecuta reset sobre la entidad.
- * Mantiene estado interno: contador de usos y límite máximo.
- * Al superar el límite, el comando es bloqueado automáticamente.
+ ResetFunctor: Functor que ejecuta reset sobre la entidad mantiene estado interno: contador de usos y límite máximo.
+ Al superar el límite el comando es bloqueado automáticamente
  */
 class ResetFunctor {
 private:
-    Entity& entity;    // Referencia a la entidad que controla
-    int execCount;     // Contador interno de ejecuciones
-    int maxUses;       // Limite máximo de usos permitidos
+    Entity& entidad;    // Referencia 
+    int contadorDeEjecuciones;     // Contador interno 
+    int usosMaximos;       
 
 public:
-    ResetFunctor(Entity& e, int maxUses)
-        : entity(e), execCount(0), maxUses(maxUses) {}
+    ResetFunctor(Entity& e, int usosMaximos)
+        : entidad(e), contadorDeEjecuciones(0), usosMaximos(usosMaximos) {}
 
     // operator() hace que la clase sea invocable como función
     void operator()(const std::list<std::string>& args) {
-        if (execCount >= maxUses) {
+        if (contadorDeEjecuciones >= usosMaximos) {
             std::cout << "[ResetFunctor] Limite alcanzado ("
-                      << maxUses << " usos). Reset BLOQUEADO.\n";
+                      << usosMaximos << " usos). Reset BLOQUEADO.\n";
             return;
         }
-        entity.reset();
-        execCount++;
+        entidad.reset();
+        contadorDeEjecuciones++;
         std::cout << "[ResetFunctor] Reset ejecutado. Uso "
-                  << execCount << "/" << maxUses << ".\n";
+                  << contadorDeEjecuciones << "/" << usosMaximos << ".\n";
     }
 
-    int getCount() const { return execCount; }
-    int getMaxUses() const { return maxUses; }
+    int getCount() const { return contadorDeEjecuciones; }
+    int getMaxUses() const { return usosMaximos; }
 };
 
 #endif

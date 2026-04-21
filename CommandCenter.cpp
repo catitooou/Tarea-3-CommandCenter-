@@ -50,14 +50,14 @@ void CommandCenter::registerMacro(
     const std::list<std::pair<std::string, std::list<std::string>>>& steps
 ) {
     macros[name] = steps;
-    std::cout << "[CommandCenter] Macro '" << name << "' registrado con "
+    std::cout << "[CommandCenter] Macro '" << name << "'  registrado con "
               << steps.size() << " paso(s).\n";
 }
 
 void CommandCenter::executeMacro(const std::string& name) {
     auto macroIt = macros.find(name);
     if (macroIt == macros.end()) {
-        std::cout << "[Error] Macro '" << name << "' no encontrado.\n";
+        std::cout << "[Error] Macro '" << name << "' no encontrado\n";
         return;
     }
 
@@ -65,19 +65,19 @@ void CommandCenter::executeMacro(const std::string& name) {
 
     const std::list<std::pair<std::string, std::list<std::string>>>& steps = macroIt->second;
 
-    // Uso explícito de std::list iterator para recorrer pasos
-    std::list<std::pair<std::string, std::list<std::string>>>::const_iterator stepIt = steps.begin();
+    // Uso  de std::list iterator para recorrer pasos
+    std::list<std::pair<std::string, std::list<std::string>>>::const_iterator pasos = steps.begin();
 
-    while (stepIt != steps.end()) {
+    while (pasos != steps.end()) {
         // Verifica que el comando del paso exista antes de ejecutar
-        std::map<std::string, Command>::iterator cmdIt = commands.find(stepIt->first);
+        std::map<std::string, Command>::iterator cmdIt = commands.find(pasos->first);
         if (cmdIt == commands.end()) {
-            std::cout << "[Macro ERROR] Detenido en paso '" << stepIt->first
+            std::cout << "[Macro ERROR] Detenido en paso '" << pasos->first
                       << "': comando no existe.\n";
             return;
         }
-        execute(stepIt->first, stepIt->second);
-        ++stepIt;
+        execute(pasos->first, pasos->second);
+        ++pasos;
     }
 
     std::cout << "[Macro] '" << name << "' completado.\n";

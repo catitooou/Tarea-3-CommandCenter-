@@ -6,32 +6,31 @@
 #include "CommandCenter.h"
 #include "ResetFunctor.h"
 
-// Declaraciones de funciones libres (definidas en commands.cpp)
+// Declaraciones de funciones libres que estan definidas en commands.cpp
+
 void healCommand(Entity&, const std::list<std::string>&);
 void damageCommand(Entity&, const std::list<std::string>&);
 void statusCommand(Entity&, const std::list<std::string>&);
 
-// -------------------------------------------------------
-// Helpers para imprimir separadores
-// -------------------------------------------------------
+//separadores 
 void printSection(const std::string& title) {
-    std::cout << "\n══════════════════════════════════════\n";
+    std::cout << "\n--------------------------------------------------------\n";
     std::cout << "  " << title << "\n";
-    std::cout << "══════════════════════════════════════\n";
+    std::cout << "-------------------------------------------------------\n";
 }
 
-// -------------------------------------------------------
+
 int main() {
 
-    Entity player("Hero");
+    Entity player("--------------Heroe------------------------------");
     CommandCenter center(player);
 
-    // ===================================================
+    //-------------------------------------------------------
     // 1. REGISTRO DE COMANDOS
-    // ===================================================
+    
     printSection("REGISTRO DE COMANDOS");
 
-    // -- Funciones libres (wrapped en lambdas para adaptar firma) --
+    // Funciones libres (wrapped en lambdas para adaptar firma) 
     center.registerCommand("heal", [&player](const std::list<std::string>& args) {
         healCommand(player, args);
     });
@@ -44,10 +43,10 @@ int main() {
         statusCommand(player, args);
     });
 
-    // -- Lambda: comando move (captura player por referencia) --
+    // Lambda: comando move captura al jugador player)por referencia)
     center.registerCommand("move", [&player](const std::list<std::string>& args) {
         if (args.size() != 2) {
-            std::cout << "[move] Error: necesita exactamente 2 argumentos (x, y).\n";
+            std::cout << "[move] Error!  necesita solo  2 argumentos (x, y)\n";
             return;
         }
         try {
@@ -56,20 +55,19 @@ int main() {
             int y = std::stoi(*it);
             player.move(x, y);
         } catch (...) {
-            std::cout << "[move] Error: argumentos invalidos (deben ser numeros).\n";
+            std::cout << "[move] Error! argumentos invalidos deben ser numeros  \n";
         }
     });
 
-    // -- Functor: ResetFunctor con limite de 3 usos --
+    // Functor: ResetFunctor con limite de 3 usos 
     ResetFunctor resetFn(player, 3);
     center.registerCommand("reset", std::ref(resetFn));
-    // std::ref permite que el estado interno del functor (execCount)
+
     // se mantenga actualizado en el objeto original resetFn
 
 
-    // ===================================================
-    // 2. DEMO - FUNCIONES LIBRES (mínimo 3 ejemplos)
-    // ===================================================
+    // ---------------------------------------------------------------
+    // 2. FUNCIONES LIBRES 
     printSection("DEMO: Funciones Libres");
 
     std::cout << ">> heal 20\n";
@@ -85,7 +83,7 @@ int main() {
     center.execute("status", std::list<std::string>{});
 
     // Casos inválidos
-    std::cout << "\n-- Casos invalidos --\n";
+    std::cout << "\n Casos invalidos !\n";
     std::cout << ">> heal (sin args)\n";
     center.execute("heal", std::list<std::string>{});
 
@@ -93,9 +91,9 @@ int main() {
     center.execute("damage", std::list<std::string>{"abc"});
 
 
-    // ===================================================
-    // 3. DEMO - LAMBDAS: move (mínimo 3 ejemplos)
-    // ===================================================
+    // -------------------------------------------------------------------
+    // 3. DEMO - LAMBDAS: move 
+    
     printSection("DEMO: Lambda - move");
 
     std::cout << ">> move 5 3\n";
@@ -119,12 +117,12 @@ int main() {
     center.execute("move", std::list<std::string>{"x", "y"});
 
 
-    // ===================================================
-    // 4. DEMO - FUNCTOR: ResetFunctor (mínimo 3 ejemplos)
-    // ===================================================
+    // ---------------------------------------------------------------------
+    // 4.DEMO - FUNCTOR: ResetFunctor 
+    // 
     printSection("DEMO: Functor - ResetFunctor (limite: 3 usos)");
 
-    // Primero dañamos al jugador y movemos para ver el efecto del reset
+    //  dañamos al jugador y movemos para ver el efecto del reset
     center.execute("damage", std::list<std::string>{"40"});
     center.execute("move", std::list<std::string>{"99", "99"});
     std::cout << ">> status (antes de resets)\n";
@@ -154,9 +152,9 @@ int main() {
               << resetFn.getCount() << "/" << resetFn.getMaxUses() << "\n";
 
 
-    // ===================================================
-    // 5. DEMO - ELIMINACIÓN DINÁMICA DE COMANDOS
-    // ===================================================
+    // .------------------------------------------------------------
+    // 5. ELIMINACIÓN DINÁMICA DE COMANDOS
+    
     printSection("DEMO: Eliminacion dinamica de comandos");
 
     std::cout << ">> Eliminando 'damage'...\n";
@@ -169,18 +167,18 @@ int main() {
     center.removeCommand("noexiste");
 
 
-    // ===================================================
-    // 6. DEMO - MACRO COMANDOS (mínimo 3 macros)
-    // ===================================================
+    // -------------------------------------------------------
+    // 6. MACRO COMANDOS (mínimo 3 macros)
+    
     printSection("DEMO: Macro Comandos");
 
-    // Macro 1: recuperar_y_ver — cura y muestra estado
+    // Macro 1: recuperar y ver — cura y muestra estado
     center.registerMacro("recuperar_y_ver", std::list<std::pair<std::string, std::list<std::string>>>{
         {"heal",   std::list<std::string>{"30"}},
         {"status", std::list<std::string>{}}
     });
 
-    // Macro 2: patrulla — secuencia de movimientos en cuadrado
+    // Macro2 patrulla — secuencia de movimientos en cuadrado
     center.registerMacro("patrulla", std::list<std::pair<std::string, std::list<std::string>>>{
         {"move",   std::list<std::string>{"3",  "0"}},
         {"move",   std::list<std::string>{"0",  "3"}},
@@ -189,7 +187,7 @@ int main() {
         {"status", std::list<std::string>{}}
     });
 
-    // Macro 3: preparar_combate — cura máxima y reposiciona
+    // Macro3: prepararcombate — cura máxima y reposiciona
     center.registerMacro("preparar_combate", std::list<std::pair<std::string, std::list<std::string>>>{
         {"heal",   std::list<std::string>{"50"}},
         {"move",   std::list<std::string>{"10", "5"}},
@@ -204,25 +202,25 @@ int main() {
         {"status", std::list<std::string>{}}
     });
 
-    std::cout << "\n-- Ejecutando macro: recuperar_y_ver --\n";
-    center.executeMacro("recuperar_y_ver");
+    std::cout << "\n Ejecutando macro: recuperar y ver \n";
+    center.executeMacro("recuperar y ver");
 
-    std::cout << "\n-- Ejecutando macro: patrulla --\n";
+    std::cout << "\n Ejecutando macro: patrulla \n";
     center.executeMacro("patrulla");
 
-    std::cout << "\n-- Ejecutando macro: preparar_combate --\n";
+    std::cout << "\n Ejecutando macro: preparar_combate \n";
     center.executeMacro("preparar_combate");
 
-    std::cout << "\n-- Ejecutando macro: macro_roto (debe detenerse) --\n";
+    std::cout << "\n Ejecutando macro: macro_roto (debe detenerse) \n";
     center.executeMacro("macro_roto");
 
     std::cout << "\n-- Ejecutando macro inexistente --\n";
     center.executeMacro("fantasma");
 
 
-    // ===================================================
+    // ------------------------------------------------------------
     // 7. ESTADO FINAL + HISTORIAL
-    // ===================================================
+    
     printSection("ESTADO FINAL");
     std::cout << player.status() << "\n";
 
